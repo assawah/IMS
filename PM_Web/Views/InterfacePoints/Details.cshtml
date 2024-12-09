@@ -1,0 +1,200 @@
+﻿@model PM.Models.InterfacePoint
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" class="row needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Project Details -->
+                        <h5 class="text-primary mb-3">Info</h5>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>Project Name:</label>
+                                <p class="form-control-static">@Model.Project.ProjectName</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Description:</label>
+                                <p class="form-control-static">@Model.Description</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Nature:</label>
+                                <p class="form-control-static">@Model.Nature</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Scope:</label>
+                                <p class="form-control-static">@Model.Scope</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Category:</label>
+                                <p class="form-control-static">@Model.Category</p>
+                            </div>
+                        </div>
+
+                        <!-- Scope and System Details -->
+                        <h5 class="text-primary mt-4 mb-3">Scope and System Details</h5>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>Scope Package 1:</label>
+                                <p class="form-control-static">@Model.ScopePackage1?.Name</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Scope Package 2:</label>
+                                <p class="form-control-static">@Model.ScopePackage2?.Name</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>System 1:</label>
+                                <p class="form-control-static">@Model.System1?.Name</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>System 2:</label>
+                                <p class="form-control-static">@Model.System2?.Name</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Extra Scope Package:</label>
+                                <p class="form-control-static">@Model.ExtraSystem</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Department 1:</label>
+                                <p class="form-control-static">@Model.Department1?.Name</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Department 2:</label>
+                                <p class="form-control-static">@Model.Department2?.Name</p>
+                            </div>
+                        </div>
+
+                        <!-- Responsibility Details -->
+                        <h5 class="text-primary mt-4 mb-3">Responsibility Details</h5>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>Accountable:</label>
+                                <p class="form-control-static">@Model.Accountable</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Consultant:</label>
+                                <p class="form-control-static">@Model.Consultant</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Informed:</label>
+                                <p class="form-control-static">@Model.Informed</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Responsible:</label>
+                                <p class="form-control-static">@Model.Responsible</p>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Supported:</label>
+                                <p class="form-control-static">@Model.Supported</p>
+                            </div>
+                        </div>
+
+                        <!-- Dates -->
+                        <h5 class="text-primary mt-4 mb-3">Dates</h5>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label>Creation Date:</label>
+                                <p class="form-control-static">@Model.CreatDate.ToString("G")</p>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Issue Date:</label>
+                                <p class="form-control-static">@Model.IssueDate?.ToString("G")</p>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Close Date:</label>
+                                <p class="form-control-static">@Model.CloseDate?.ToString("G")</p>
+                            </div>
+                        </div>
+
+                        <!-- BOQs and Activities -->
+                        <h5 class="text-primary mt-4 mb-3">Details</h5>
+                        <div class="form-group mb-3">
+                            <label>BOQs:</label>
+                            <select class="form-control">
+                                @foreach (var boq in Model.BOQs ?? [])
+                                {
+                                    <option>@boq.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Activities:</label>
+                            <select class="form-control">
+                                @foreach (var activity in Model.Activities ?? [])
+                                {
+                                    <option>@activity.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Documentations -->
+                        <h5 class="text-primary mt-4 mb-3">Documentations</h5>
+                        <div class="form-group">
+                            @foreach (var documentation in Model.Documentations ?? new List<Documentation>())
+                            {
+                                <div class="mb-2">
+                                    <span>@documentation.DocumentationDescription</span> - <a href="@documentation.DocumentationLink">Link</a>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Buttons -->
+                        <hr />
+                        @if ((User.IsInRole("Cordinator") && Model.Status == "Pending") || ((User.IsInRole("Contractor") || User.IsInRole("TeamManager")) && Model.Status == "Holding"))
+                        {
+                            <a asp-action="Issue" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mb-3">
+                                Issue
+                            </a>
+                        }
+
+                        @if (User.IsInRole("Cordinator"))
+                        {
+                            @if (ViewBag.dep != null)
+                            {
+                                <div class="form-group">
+                                    <label for="departmentSelect">Select Department:</label>
+                                    <select id="departmentSelect" class="form-control" onchange="updateLink()">
+                                        <option value="">Select Department</option>
+                                        @foreach (var item in ViewBag.dep)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <a id="sendToDepLink" href="#" class="btn btn-warning btn-sm mt-3" onclick="navigateToSelectedDepartment()">
+                                    Send To This Department
+                                </a>
+                            }
+                        }
+
+                        <a asp-action="Index" class="btn btn-secondary btn-sm mt-3">Back to List</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let depId = "";
+
+    function updateLink() {
+        depId = document.getElementById("departmentSelect").value;
+    }
+
+    function navigateToSelectedDepartment() {
+        if (depId) {
+            window.location.href = `@Url.Action("SendToDep", new { id = Model.Id })?depId=${depId}`;
+        } else {
+            alert("Please select a department before proceeding.");
+        }
+    }
+</script>

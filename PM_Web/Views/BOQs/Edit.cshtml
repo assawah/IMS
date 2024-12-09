@@ -1,0 +1,53 @@
+﻿@model PM.Models.ViewModels.BOQViewModel
+
+@{
+    ViewData["Title"] = "Edit BOQ";
+}
+
+<div class="container">
+    <h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control form-control-lg" placeholder="Enter item name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Quantity" class="form-label"></label>
+                    <input asp-for="Quantity" type="number" class="form-control form-control-lg" placeholder="Enter quantity" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Cost" class="form-label"></label>
+                    <input asp-for="Cost" type="number" step="0.01" class="form-control form-control-lg" placeholder="Enter cost per unit" />
+                    <span asp-validation-for="Cost" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Unit" class="form-label"></label>
+                    <input asp-for="Unit" class="form-control form-control-lg" placeholder="Enter unit of measurement" />
+                    <span asp-validation-for="Unit" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

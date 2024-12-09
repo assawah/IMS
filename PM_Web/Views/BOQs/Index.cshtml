@@ -1,0 +1,86 @@
+﻿@model IEnumerable<PM.Models.BOQ>
+
+@{
+    ViewData["Title"] = "BOQ List";
+}
+
+<h1 class="text-center mt-3">Bill of Quantities (BOQ)</h1>
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <form id="filterForm" asp-action="Index" method="get" class="form-inline">
+                <div class="btn-group mb-2" role="group" aria-label="projectId">
+                    <button type="button" class="btn btn-outline-primary" data-filter="projectId" data-value="" onclick="applyFilter('projectId', '')">All Projects</button>
+                    @foreach (var item in ViewBag.projects)
+                    {
+                        <button type="button" class="btn btn-outline-primary" data-filter="projectId" data-value="item.Text" onclick="applyFilter('projectId', '@item.Value')">@item.Text</button>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table id="boqTable" class="table table-hover table-bordered text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Project</th>
+                        <th>BOQ Name</th>
+                        <th>Quantity</th>
+                        <th>Cost</th>
+                        <th>Unit</th>
+                        <th>Total Cost</th>
+                        <th width="150px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Project.ProjectName</td>
+                            <td>@item.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Cost</td>
+                            <td>@item.Unit</td>
+                            <td>@(item.Cost * item.Quantity)</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark btn-sm mr-1"><i class="fa fa-edit"></i> Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            $('#boqTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true
+            });
+        });
+
+        function applyFilter(filter, value) {
+            const url = new URL(window.location.href);
+            url.searchParams.set(filter, value);
+            window.location.href = url;
+        }
+    </script>
+}

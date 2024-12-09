@@ -1,0 +1,596 @@
+﻿@model PM.Models.ViewModels.ProjectViewModel
+
+@{
+    ViewData["Title"] = "Edit Project";
+    var x = 1;
+}
+
+<div class="container">
+    <h2 class="text-center mt-4">@ViewData["Title"]</h2>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post" class="row needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="form-group mb-3 col-md-6">
+                            <label asp-for="ProjectName" class="control-label font-weight-bold"></label>
+                            <input asp-for="ProjectName" class="form-control form-control-lg" placeholder="Project Name" />
+                            <span asp-validation-for="ProjectName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3 col-md-6">
+                            <label asp-for="Location" class="control-label font-weight-bold"></label>
+                            <input asp-for="Location" class="form-control form-control-lg" placeholder="Location" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3 col-md-6">
+                            <label asp-for="JVPartners" class="control-label font-weight-bold"></label>
+                            <input asp-for="JVPartners" class="form-control form-control-lg" placeholder="Number of JV Partners" />
+                            <span asp-validation-for="JVPartners" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3 col-md-6">
+                            <label asp-for="ProjectValue" class="control-label font-weight-bold"></label>
+                            <input asp-for="ProjectValue" class="form-control form-control-lg" placeholder="Project Value" />
+                            <span asp-validation-for="ProjectValue" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3 col-md-6">
+                            <label asp-for="ContractingStrategies" class="control-label font-weight-bold"></label>
+                            <input asp-for="ContractingStrategies" class="form-control form-control-lg" placeholder="Contracting Strategies" />
+                            <span asp-validation-for="ContractingStrategies" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="ProjectNature" class="form-label">Nature</label>
+                            <select asp-for="ProjectNature" class="form-control form-control-lg">
+                                <option value="">--Select--</option>
+                                <option value="greenfield">Greenfield</option>
+                                <option value="brownfield">Brownfield</option>
+                            </select>
+                            <span asp-validation-for="ProjectNature" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="ProjectType" class="form-label">Type</label>
+                            <select asp-for="ProjectType" class="form-control form-control-lg">
+                                <option value="">--Select--</option>
+                                <option value="including chemical manufacturing">Including Chemical Manufacturing</option>
+                                <option value="stadium">Stadium</option>
+                                <option value="museum">Museum</option>
+                                <option value="dam">Dam</option>
+                                <option value="highway">Highway</option>
+                                <option value="power generation">Power Generation</option>
+                                <option value="water/wastewater">Water/Wastewater</option>
+                                <option value="consumer products manufacturing">Consumer Products Manufacturing</option>
+                                <option value="oil refining">Oil Refining</option>
+                                <option value="metals refining/processing">Metals Refining/Processing</option>
+                                <option value="oil exploration/production">Oil Exploration/Production</option>
+                                <option value="construction">construction</option>
+                                <option value="infrastructure">infrastructure</option>
+                                <option value="road">road</option>
+                            </select>
+                            <span asp-validation-for="ProjectType" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="ProjectStage" class="form-label">Stage</label>
+                            <select asp-for="ProjectStage" class="form-control form-control-lg">
+                                <option value="">--Select--</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="including Front End planning">Including Front End Planning</option>
+                                <option value="design">Design</option>
+                                <option value="procurement">Procurement</option>
+                                <option value="construction">Construction</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                            <span asp-validation-for="ProjectStage" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="DeliveryStrategies" class="form-label">Delivery Strategy</label>
+                            <select asp-for="DeliveryStrategies" class="form-control form-control-lg">
+                                <option value="">--Select--</option>
+                                <option value="Design, Bid, Build (DBB)">Design, Bid, Build (DBB)</option>
+                                <option value="Design, Build (DB)">Design, Build (DB)</option>
+                                <option value="procurement, construction (PC)">Procurement, Construction (PC)</option>
+                                <option value="Engineering, Procurement, Construction (EPC)">Engineering, Procurement, Construction (EPC)</option>
+                                <option value="Engineering, Procurement, Construction, Management (EPCM)">Engineering, Procurement, Construction, Management (EPCM)</option>
+                                <option value="construction">Construction</option>
+                                <option value="Build, Own, Operate (BOO)">Build, Own, Operate (BOO)</option>
+                            </select>
+                            <span asp-validation-for="DeliveryStrategies" class="text-danger"></span>
+                        </div>
+
+                        <hr />
+
+
+                        <div class="form-group mb-3">
+                            <label class="control-label font-weight-bold">Owners</label>
+                            <table class="table table-bordered">
+                                <tbody id="ownersTable">
+                                @for (var i = 0; i < Model.Owners.Count; i++)
+                                {
+                                   
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td><input name="Owners[@i]" class="form-control form-control-lg" value="@Model.Owners[i]" placeholder="Owner name" /></td>
+                                        <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-primary" onclick="addOwnerRow()">Add Owner</button>
+                        </div>
+                        <hr />
+
+                        <div class="form-group mb-3">
+                            <label class="control-label font-weight-bold">Systems</label>
+                            <table class="table table-bordered" id="systemsTable">
+                                <tbody id="systemsBody">
+                                @for (var i = 0; i < Model.Systems.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td><input name="" class="form-control form-control-lg" value="@Model.Systems[i]" placeholder="System name" readonly/></td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-primary" onclick="addSystemRow()">Add System</button>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group mb-3">
+                            <label class="control-label font-weight-bold">BOQs</label>
+                            <div id="boqContainer">
+                                @{
+                                    x = 0;
+                                }
+                                <!-- Existing BOQ divisions will be rendered here -->
+                                @foreach (var division in Model.BoqDivision)
+                                {
+                                    var y = 1;
+                                    <button class="btn btn-link font-weight-bold"
+                                            data-toggle="collapse"
+                                            data-target="#@division.Name"
+                                            aria-expanded="false"
+                                            aria-controls="@division.Name"
+                                            onclick="event.preventDefault();">
+                                        @division.Name
+                                    </button>
+                                    <div id="@division.Name" class="collapse">
+                                        <table class="table table-bordered">
+                                            <tbody id="boqTable@(x)">
+                                            @foreach (var boq in division.Boqs)
+                                            {
+                                                <tr>
+                                                    <td>@(y)</td>
+                                                    <td colspan="4">BOQ Name<input readonly class="form-control form-control-lg" value="@Model.BOQs[boq].Name" /></td>
+                                                </tr>
+                                                <tr>  
+                                                    <td>Quantity<input readonly class="form-control form-control-lg" value="@Model.BOQs[boq].Quantity" oninput="calculateTotalCost();" /></td>
+                                                    <td>Cost<input readonly class="form-control form-control-lg" value="@Model.BOQs[boq].Cost" oninput="calculateTotalCost();" /></td>
+                                                    <td>Unit<input readonly class="form-control form-control-lg" value="@Model.BOQs[boq].Unit" /></td>
+                                                    <td>Total Cost<input readonly class="form-control form-control-lg" value="@(Model.BOQs[boq].Quantity * Model.BOQs[boq].Cost)" /></td>
+                                                </tr>
+                                                y++;
+                                            }
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <button type="button" class="btn btn-secondary" onclick="addBOQRow(@x)">Add BOQ</button>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    x++;
+                                }
+                            </div>
+                            <button type="button" class="btn btn-primary mt-3" onclick="createBoqGroup();">Add BOQ Division</button>
+                            <table>
+                                <tr>
+                                    <td colspan="5" class="text-right font-weight-bold">Grand Total Cost:</td>
+                                    <td><input id="grandTotalCost" class="form-control" readonly /></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr/>
+                        <div class="form-group mb-3">
+                            <label class="control-label font-weight-bold">Activities</label>
+                            <div id="activityContainer">
+                                @{
+                                    x = 0;
+                                }
+
+                                @foreach (var activityGroup in Model.ActivityDivision)
+                                {
+                                    var z = 1;
+                                    <button class="btn btn-link font-weight-bold"
+                                            data-toggle="collapse"
+                                            data-target="#activityGroup@(activityGroup.Name)"
+                                            aria-expanded="false"
+                                            aria-controls="activityGroup@(activityGroup.Name)"
+                                            onclick="event.preventDefault();">
+                                        @(activityGroup.Name)
+                                    </button>
+                                    <div id="activityGroup@(activityGroup.Name)" class="collapse">
+                                        <table class="table table-bordered">
+                                            <tbody id="activityTable@(x)">
+                                            @foreach (var activity in activityGroup.Activities)
+                                            {
+                                                <tr>
+                                                    <td>@(z)</td>
+                                                    <td colspan="2">Activity Name<input readonly class="form-control form-control-lg" value="@Model.Activities[activity].Name"/></td>
+                                                </tr>
+                                                <tr>
+                                                     <td>Start Date<input readonly type="date" class="form-control" value="@Model.Activities[activity].StartDate.ToString("yyyy-MM-dd")"/></td>
+                                                    <td>Finish Date<input readonly type="date" class="form-control" value="@Model.Activities[activity].FinishDate.ToString("yyyy-MM-dd")"/></td>
+                                                </tr>
+                                                z++;
+                                            }
+                                            </tbody>
+                                        </table>
+                                        <button type="button" class="btn btn-secondary" onclick="addActivityRow(@x)">Add Activity</button>
+                                    </div>
+                                    x++;
+                                }
+                            </div>
+                            <button type="button" class="btn btn-primary mt-3" onclick="createActivityGroup();">Add Activity Division</button>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group mb-3">
+                            <label class="control-label font-weight-bold">Scope Packages</label>
+                            <table class="table table-bordered">
+                                <tbody id="scopePackagesTable">
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-primary" onclick="addScopePackageRow()">Add Scope Package</button>
+                        </div>
+                        <hr />
+
+                        <div class="form-group mb-3">
+                            <label class="control-label font-weight-bold">Departments</label>
+                            <table class="table table-bordered" >
+                                <tbody id="departmentsTable">
+                                   
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-primary" onclick="addDepartmentRow()">Add Department</button>
+                        </div>
+                        
+                        
+                        <input type="hidden" name="ActivityDivisionsJson" id="ActivityDivisionsJson" />
+                        <input type="hidden" name="BoqDivisionsJson" id="BoqDivisionsJson" />
+                        <hr/>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-lg" onclick="submitForm()">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            calculateTotalCost(); // Call calculateTotalCost on page load
+        });
+
+        function addOwnerRow() {
+            const rowIndex = $('#ownersTable tr').length;
+            var row = `<tr>
+                                                           <td>${rowIndex + 1}</td>
+                                                           <td><input name="Owners[${rowIndex}]" class="form-control form-control-lg" placeholder="owner name" /></td>
+                                                   <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                               </tr>`;
+            document.getElementById('ownersTable').insertAdjacentHTML('beforeend', row);
+            ownerIndex++;
+        }
+
+        function addSystemRow() {
+            const rowIndex = $('#systemsBody tr').length;
+            const systemIndex = 0;
+            var row = `<tr>
+                                                               <td>${rowIndex + 1}</td>
+                                                                       <td><input name="Systems[${systemIndex}]" class="form-control form-control-lg" placeholder="system name" /></td>
+                                               <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                           </tr>`;
+            document.getElementById('systemsTable').querySelector('tbody').insertAdjacentHTML('beforeend', row);
+            systemIndex++;
+        }
+
+        function addScopePackageRow() {
+            const rowIndex = $('#scopePackagesTable tr').length;
+            const scopePackageIndex = 0;
+            var row = `<tr>
+                                                                   <td>${rowIndex + 1}</td>
+                                                                   <td><input name="ScopePackages[${scopePackageIndex}].Name" class="form-control form-control-lg" placeholder="scope package name" /></td>
+                                                                   <td><input name="ScopePackages[${scopePackageIndex}].InterfaceManager.Name" class="form-control form-control-lg" placeholder="manager name" /></td>
+                                                                   <td><input name="ScopePackages[${scopePackageIndex}].InterfaceManager.Email" class="form-control form-control-lg" placeholder="email" /></td>
+                                                                   <td><input name="ScopePackages[${scopePackageIndex}].InterfaceManager.Password" class="form-control form-control-lg" placeholder="password" /></td>
+                                                   <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                               </tr>`;
+            document.getElementById('scopePackagesTable').insertAdjacentHTML('beforeend', row);
+            scopePackageIndex++;
+        }
+
+
+        let globalBoqIndex = 0;
+        let globalActivityIndex = 0;
+        let boqDivisions = @Html.Raw(Json.Serialize(Model.BoqDivision.Select(d => new { d.Name, d.Boqs })));
+        let activityGroups = @Html.Raw(Json.Serialize(Model.ActivityDivision.Select(d => new { d.Name, d.Activities })));
+
+
+        function createBoqGroup() {
+            const groupName = prompt("Enter BOQ Group Name:");
+            if (groupName) {
+                const groupIndex = boqDivisions.length;
+                boqDivisions.push({ name: groupName, boqs: [] });
+
+                const container = document.getElementById('boqContainer');
+                const newGroup = `
+                    <button class="btn btn-link font-weight-bold" data-toggle="collapse" data-target="#boqGroup${groupIndex}" aria-expanded="false" aria-controls="boqGroup${groupIndex}" onclick="event.preventDefault();">
+                        ${groupName} (Group ${groupIndex + 1})
+                    </button>
+                    <div id="boqGroup${groupIndex}" class="collapse show">
+                        <table class="table table-bordered">
+                            <tbody id="boqTable${groupIndex}">
+                                <!-- BOQ rows will be added here dynamically -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <button type="button" class="btn btn-secondary" onclick="addBOQRow(${groupIndex})">Add BOQ</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', newGroup);
+            }
+        }
+
+        function addBOQRow(groupIndex) {
+            const rowIndex = globalBoqIndex++;
+            const row = `
+            <tr>
+                <td>${boqDivisions[groupIndex].boqs.length + 1}</td>
+                <td colspan="4"><textarea name="BOQs[${rowIndex}].Name" class="form-control form-control-lg" placeholder="BOQ name" ></textarea></td>
+               </tr>
+            <tr> 
+                <td><input name="BOQs[${rowIndex}].Quantity" class="form-control form-control-lg" placeholder="quantity" oninput="calculateTotalCost()" /></td>
+                <td><input name="BOQs[${rowIndex}].Cost" class="form-control form-control-lg" placeholder="cost" oninput="calculateTotalCost()" /></td>
+                <td><input name="BOQs[${rowIndex}].Unit" class="form-control form-control-lg" placeholder="unit" /></td>
+                <td><input name="BOQs[${rowIndex}].TotalCost" class="form-control form-control-lg" placeholder="total cost" readonly /></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeBoqRow(this, ${groupIndex})">Remove</button></td>
+            </tr>`;
+
+            document.getElementById(`boqTable${groupIndex}`).insertAdjacentHTML('beforeend', row);
+            boqDivisions[groupIndex].boqs.push(@Model.BOQs.Count + rowIndex);
+            calculateTotalCost();
+        }
+
+        function removeBoqRow(button, groupIndex) {
+            const currentRow = button.closest('tr'); // Current row (Quantity, Cost, Unit, Total Cost)
+            const previousRow = currentRow.previousElementSibling; // Previous row (BOQ Name)
+
+            // Remove both rows from the DOM
+            if (previousRow) previousRow.remove();
+            currentRow.remove();
+
+            // Recalculate indices within the group
+            const boqTable = document.getElementById(`boqTable${groupIndex}`);
+            let globalIndex = 0;
+
+            boqDivisions[groupIndex].boqs = []; // Reset BOQ indices for the group
+
+            Array.from(boqTable.querySelectorAll('tr')).forEach((row, idx) => {
+                if (idx % 2 === 0) { // Name rows are even-indexed
+                    row.cells[0].textContent = idx / 2 + 1; // Update BOQ row number
+                    const textarea = row.querySelector('textarea');
+                    if (textarea) {
+                        textarea.name = `BOQs[${globalIndex}].Name`;
+                    }
+                } else { // Data rows (Quantity, Cost, etc.) are odd-indexed
+                    const quantityInput = row.querySelector('input[name*="Quantity"]');
+                    const costInput = row.querySelector('input[name*="Cost"]');
+                    const unitInput = row.querySelector('input[name*="Unit"]');
+                    const totalCostInput = row.querySelector('input[name*="TotalCost"]');
+
+                    if (quantityInput) quantityInput.name = `BOQs[${globalIndex}].Quantity`;
+                    if (costInput) costInput.name = `BOQs[${globalIndex}].Cost`;
+                    if (unitInput) unitInput.name = `BOQs[${globalIndex}].Unit`;
+                    if (totalCostInput) totalCostInput.name = `BOQs[${globalIndex}].TotalCost`;
+
+                    boqDivisions[groupIndex].boqs.push(globalIndex); // Update group's BOQs array
+                    globalIndex++;
+                }
+            });
+
+            // Recalculate totals
+            calculateTotalCost();
+        }
+
+
+        function calculateTotalCost() {
+            let grandTotal = 0;
+
+            boqDivisions.forEach((division, groupIndex) => {
+                let groupTotal = 0;
+        
+                division.boqs.forEach((boqIndex) => {
+                    const quantityInput = document.querySelector(`input[name="BOQs[${boqIndex}].Quantity"]`);
+                    const costInput = document.querySelector(`input[name="BOQs[${boqIndex}].Cost"]`);
+                    const totalCostInput = document.querySelector(`input[name="BOQs[${boqIndex}].TotalCost"]`);
+            
+                    const quantity = parseFloat(quantityInput?.value) || 0;
+                    const cost = parseFloat(costInput?.value) || 0;
+                    const totalCost = quantity * cost;
+
+                    if (totalCostInput) {
+                        totalCostInput.value = (totalCost).toFixed(2);
+                    }
+
+                    groupTotal += totalCost;
+                });
+        
+                const groupTotalCostInput = document.getElementById(`groupTotalCost${groupIndex}`);
+                if (groupTotalCostInput) {
+                    groupTotalCostInput.value = groupTotal.toFixed(2);
+                }
+
+                grandTotal += groupTotal;
+            });
+
+            const grandTotalCostInput = document.getElementById('grandTotalCost');
+            if (grandTotalCostInput) {
+                grandTotalCostInput.value = (grandTotal + @Model.BOQs.Sum(x=>x.Quantity*x.Cost)).toFixed(2);
+            }
+        }
+
+        function createActivityGroup() {
+            const groupName = prompt("Enter Activity Group Name:");
+            if (groupName) {
+                const groupIndex = activityGroups.length;
+                activityGroups.push({ name: groupName, activities: [] });
+
+                const container = document.getElementById('activityContainer');
+                const newGroup = `
+                    <button class="btn btn-link font-weight-bold" data-toggle="collapse" data-target="#activityGroup${groupIndex}" aria-expanded="false" aria-controls="activityGroup${groupIndex}" onclick="event.preventDefault();">
+                        ${groupName} (Group ${groupIndex + 1})
+                    </button>
+                    <div id="activityGroup${groupIndex}" class="collapse show">
+                        <table class="table table-bordered">
+                            <tbody id="activityTable${groupIndex}">
+                                <!-- Activity rows will be added here dynamically -->
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-secondary" onclick="addActivityRow(${groupIndex})">Add Activity</button>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', newGroup);
+            }
+        }
+
+        function addActivityRow(groupIndex) {
+            const rowIndex = globalActivityIndex++;
+            const row = ` 
+            <tr>
+                <td>${activityGroups[groupIndex].activities.length + 1}</td>
+                <td  colspan="2"> <textarea name="Activities[${rowIndex}].Name" class="form-control form-control-lg" placeholder="Activity name" ></textarea></td>
+           </tr>
+            <tr> 
+                <td>Start Date<input type="date" name="Activities[${rowIndex}].StartDate" class="form-control" /></td>
+                <td>Finish Date<input type="date" name="Activities[${rowIndex}].FinishDate" class="form-control" /></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeActivityRow(this, ${groupIndex})">Remove</button></td>
+            </tr>`;
+
+            document.getElementById(`activityTable${groupIndex}`).insertAdjacentHTML('beforeend', row);
+            activityGroups[groupIndex].activities.push(@Model.Activities.Count + rowIndex);
+        }
+
+        function removeActivityRow(button, groupIndex) {
+            const currentRow = button.closest('tr'); // Current row (Start Date, Finish Date, Remove button)
+            const previousRow = currentRow.previousElementSibling; // Previous row (Activity Name)
+
+            // Remove both rows from the DOM
+            if (previousRow) previousRow.remove();
+            currentRow.remove();
+
+            // Get the activity table for the group
+            const activityTable = document.getElementById(`activityTable${groupIndex}`);
+            let globalIndex = 0;
+
+            // Recalculate indices and update the group's activities array
+            activityGroups[groupIndex].activities = []; // Reset activities array for the group
+
+            Array.from(activityTable.querySelectorAll('tr')).forEach((row, idx) => {
+                if (idx % 2 === 0) { // Name rows (even-indexed rows)
+                    row.cells[0].textContent = idx / 2 + 1; // Update the activity number
+                    const textarea = row.querySelector('textarea');
+                    if (textarea) {
+                        textarea.name = `Activities[${globalIndex}].Name`;
+                    }
+                } else { // Date rows (odd-indexed rows)
+                    const startDateInput = row.querySelector('input[name*="StartDate"]');
+                    const finishDateInput = row.querySelector('input[name*="FinishDate"]');
+
+                    if (startDateInput) startDateInput.name = `Activities[${globalIndex}].StartDate`;
+                    if (finishDateInput) finishDateInput.name = `Activities[${globalIndex}].FinishDate`;
+
+                    activityGroups[groupIndex].activities.push(globalIndex); // Update the group's activities array
+                    globalIndex++;
+                }
+            });
+        }
+
+
+        function submitForm() {
+            const boqDivisionsJson = JSON.stringify(boqDivisions);
+            document.getElementById("BoqDivisionsJson").value = boqDivisionsJson;
+
+            const activityDivisionsJson = JSON.stringify(activityGroups);
+            document.getElementById("ActivityDivisionsJson").value = activityDivisionsJson;
+        }
+
+
+        function addDepartmentRow() {
+            const rowIndex = $('#departmentsTable tr').length;
+            var row = `<tr>
+                                                   <td>${rowIndex + 1}</td>
+                                   <td><input name="Departments[${rowIndex}].Name" class="form-control form-control-lg" placeholder="department name" /></td>
+                                   <td>                           
+                                       <input name="Departments[${rowIndex}].TeamManager.Name" class="form-control form-control-lg" placeholder="manager name" />
+                                       <input name="Departments[${rowIndex}].TeamManager.Email" class="form-control form-control-lg" placeholder="email" />
+                                       <input name="Departments[${rowIndex}].TeamManager.Password" class="form-control form-control-lg" placeholder="password" />
+                                   </td>
+                                   <td>
+                                       <button type="button" class="btn btn-primary" onclick="addTeamMember(this)">Add Team Member</button>
+                                       <div class="team-members">
+                                           <!-- Team members will be dynamically added here -->
+                                       </div>
+                                   </td>
+                                   <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                               </tr>`;
+            document.getElementById('departmentsTable').insertAdjacentHTML('beforeend', row);
+        }
+
+        function addTeamMember(button) {
+            const rowIndex = $('#departmentsTable tr').length;
+            var departmentRow = button.closest('tr');
+            var teamMembersDiv = departmentRow.querySelector('.team-members');
+
+            var memberId = teamMembersDiv.children.length;
+
+            var teamMemberHtml = `<div class="form-group">
+                                            <input name="Departments[${rowIndex - 1}].TeamMembers[${memberId}].Name" class="form-control form-control-lg" placeholder="name" />
+                                            <input name="Departments[${rowIndex - 1}].TeamMembers[${memberId}].Email" class="form-control form-control-lg" placeholder="email" />
+                                            <input name="Departments[${rowIndex - 1}].TeamMembers[${memberId}].Password" class="form-control form-control-lg" placeholder="password" />
+                                            <button type="button" class="btn btn-danger" onclick="removeTeamMember(this)">Remove</button>
+                                          </div>`;
+
+            teamMembersDiv.insertAdjacentHTML('beforeend', teamMemberHtml);
+        }
+
+        function removeTeamMember(button) {
+            var teamMemberDiv = button.parentNode;
+            teamMemberDiv.parentNode.removeChild(teamMemberDiv);
+        }
+
+      
+    </script>
+}
